@@ -11,6 +11,7 @@ from PySide6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout,
 from app.signals.bus import player_signals
 from app.model.playlist_model import PlaylistModel, PlaylistItem
 from app.model.history_model import HistoryModel
+from app.view.icon_helper import load_icon
 
 
 class PlaylistPanel(QWidget):
@@ -48,7 +49,9 @@ class PlaylistPanel(QWidget):
 
         list_toolbar = QHBoxLayout()
         list_toolbar.setContentsMargins(4, 4, 4, 4)
-        clear_btn = QPushButton("🗑 清空")
+        clear_btn = QPushButton(" 清空")
+        clear_btn.setIcon(load_icon("clear.svg"))
+        clear_btn.setIconSize(Qt.QSize(14, 14))
         clear_btn.setFixedHeight(24)
         clear_btn.setStyleSheet("QPushButton { background: transparent; color: #aaa; font-size: 12px; border: 1px solid #444; border-radius: 4px; padding: 2px 8px; } QPushButton:hover { color: #ff6b6b; border-color: #ff6b6b; }")
         list_toolbar.addStretch()
@@ -75,7 +78,9 @@ class PlaylistPanel(QWidget):
 
         history_toolbar = QHBoxLayout()
         history_toolbar.setContentsMargins(4, 4, 4, 4)
-        clear_history_btn = QPushButton("🗑 清除历史")
+        clear_history_btn = QPushButton(" 清除历史")
+        clear_history_btn.setIcon(load_icon("clear.svg"))
+        clear_history_btn.setIconSize(Qt.QSize(14, 14))
         clear_history_btn.setFixedHeight(24)
         clear_history_btn.setStyleSheet(clear_btn.styleSheet())
         history_toolbar.addStretch()

@@ -1,14 +1,15 @@
 # app/view/volume_widget.py
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QWidget, QHBoxLayout, QPushButton,
-                               QSlider, QVBoxLayout)
+                               QSlider)
 
 from app.signals.bus import player_signals
+from app.view.icon_helper import load_icon
 
 
 class VolumeWidget(QWidget):
-    """音量按钮 + 弹出滑块组合控件。"""
+    """音量按钮 + 滑块组合控件。"""
 
     def __init__(self, parent=None):
         super().__init__(parent)
@@ -17,8 +18,16 @@ class VolumeWidget(QWidget):
 
         self._btn = QPushButton()
         self._btn.setFixedSize(32, 32)
+        self._btn.setIconSize(Qt.QSize(20, 20))
         self._btn.setToolTip("音量 (M 键静音)")
-        self._update_icon()
+        self._btn.setStyleSheet("""
+            QPushButton {
+                background: transparent;
+                border: none;
+                color: #ddd;
+            }
+            QPushButton:hover { color: #fff; }
+        """)
 
         self._slider = QSlider(Qt.Horizontal)
         self._slider.setRange(0, 100)
@@ -39,8 +48,11 @@ class VolumeWidget(QWidget):
         player_signals.volume_changed.connect(self._on_volume_changed)
         player_signals.muted_changed.connect(self._on_muted_changed)
 
+        self._update_icon()
+
     def _on_button_clicked(self):
-        self._controller.toggle_mute() if hasattr(self, '_controller') else None
+        if hasattr(self, '_controller'):
+            self._controller.toggle_mute()
 
     def _on_slider_changed(self, value: int):
         if hasattr(self, '_controller'):
@@ -59,14 +71,14 @@ class VolumeWidget(QWidget):
 
     def _update_icon(self):
         if self._muted or self._volume == 0:
-            text = "🔇"
+            name = "volume_mute"
         elif self._volume < 35:
-            text = "🔈"
+            name = "volume_low"
         elif self._volume < 70:
-            text = "🔉"
+            name = "volume_medium"
         else:
-            text = "🔊"
-        self._btn.setText(text)
+            name = "volume_high"
+        self._btn.setIcon(load_icon(f"{name}.svg"))
 
     def set_controller(self, controller):
         self._controller = controller

@@ -1,20 +1,21 @@
 # app/view/control_bar.py
 from PySide6.QtCore import Qt, QTimer
-from PySide6.QtGui import QKeySequence, QShortcut, QFont
+from PySide6.QtGui import QKeySequence, QShortcut, QFont, QIcon
 from PySide6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout,
                                QPushButton, QSlider, QLabel,
                                QMenu, QSizePolicy)
 
 from app.signals.bus import player_signals
 from app.view.volume_widget import VolumeWidget
+from app.view.icon_helper import load_icon
 from app.model.playlist_model import PlaylistModel
 
 
-PLAY_MODE_SYMBOLS = {
-    0: "➡️",   # SEQUENTIAL
-    1: "🔁",   # LOOP_ALL
-    2: "🔂",   # LOOP_ONE
-    3: "🔀",   # SHUFFLE
+PLAY_MODE_ICONS = {
+    0: "sequential",  # SEQUENTIAL
+    1: "loop_all",    # LOOP_ALL
+    2: "loop_one",    # LOOP_ONE
+    3: "shuffle",     # SHUFFLE
 }
 
 PLAY_MODE_TOOLTIPS = {
@@ -86,41 +87,58 @@ class ControlBar(QWidget):
 
         # ── 第 2 行：控制按钮 ──
         row2 = QHBoxLayout()
-        row2.setSpacing(6)
+        row2.setSpacing(4)
 
+        icon_size = 22
         btn_style = """
             QPushButton {
                 background: transparent;
                 border: none;
-                font-size: 18px;
-                padding: 4px 8px;
+                padding: 4px 6px;
                 color: #ddd;
             }
             QPushButton:hover { color: #fff; }
             QPushButton:pressed { color: #6c63ff; }
         """
 
-        self._prev_btn = QPushButton("⏮")
-        self._play_btn = QPushButton("▶")
-        self._play_btn.setFixedWidth(40)
+        # 上一曲
+        self._prev_btn = QPushButton()
+        self._prev_btn.setIcon(load_icon("prev.svg"))
+        self._prev_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._prev_btn.setToolTip("上一曲")
+
+        # 播放/暂停
+        self._play_btn = QPushButton()
+        self._play_btn.setIcon(load_icon("play.svg"))
+        self._play_btn.setIconSize(Qt.QSize(icon_size + 4, icon_size + 4))
+        self._play_btn.setFixedWidth(44)
         self._play_btn.setStyleSheet("""
             QPushButton {
                 background: #6c63ff;
                 border: none;
-                border-radius: 16px;
-                font-size: 18px;
-                padding: 4px 14px;
+                border-radius: 18px;
+                padding: 4px;
                 color: white;
-                min-height: 30px;
+                min-height: 32px;
             }
             QPushButton:hover { background: #7b73ff; }
             QPushButton:pressed { background: #5b53ef; }
         """)
-        self._next_btn = QPushButton("⏭")
-        self._stop_btn = QPushButton("⏹")
+
+        # 下一曲
+        self._next_btn = QPushButton()
+        self._next_btn.setIcon(load_icon("next.svg"))
+        self._next_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._next_btn.setToolTip("下一曲")
+
+        # 停止
+        self._stop_btn = QPushButton()
+        self._stop_btn.setIcon(load_icon("stop.svg"))
+        self._stop_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._stop_btn.setToolTip("停止")
 
         for btn in (self._prev_btn, self._play_btn, self._next_btn, self._stop_btn):
-            btn.setFixedHeight(34)
+            btn.setFixedHeight(36)
             if btn != self._play_btn:
                 btn.setStyleSheet(btn_style)
             btn.setCursor(Qt.PointingHandCursor)
@@ -128,34 +146,44 @@ class ControlBar(QWidget):
         # 音量控件
         self._volume_widget = VolumeWidget()
 
-        # 倍速
+        # 倍速（保留文字，因为数值信息更重要）
         self._speed_btn = QPushButton("1.0x")
         self._speed_btn.setStyleSheet(btn_style)
         self._speed_btn.setFixedWidth(48)
         self._speed_btn.setToolTip("点击切换倍速")
 
         # 字幕按钮
-        self._sub_btn = QPushButton("📄")
+        self._sub_btn = QPushButton()
+        self._sub_btn.setIcon(load_icon("subtitle.svg"))
+        self._sub_btn.setIconSize(Qt.QSize(icon_size, icon_size))
         self._sub_btn.setStyleSheet(btn_style)
         self._sub_btn.setToolTip("字幕轨道")
 
         # 音轨按钮
-        self._audio_btn = QPushButton("🎤")
+        self._audio_btn = QPushButton()
+        self._audio_btn.setIcon(load_icon("audio_track.svg"))
+        self._audio_btn.setIconSize(Qt.QSize(icon_size, icon_size))
         self._audio_btn.setStyleSheet(btn_style)
         self._audio_btn.setToolTip("音轨切换")
 
         # 截图
-        self._screenshot_btn = QPushButton("📷")
+        self._screenshot_btn = QPushButton()
+        self._screenshot_btn.setIcon(load_icon("screenshot.svg"))
+        self._screenshot_btn.setIconSize(Qt.QSize(icon_size, icon_size))
         self._screenshot_btn.setStyleSheet(btn_style)
         self._screenshot_btn.setToolTip("截图 (S 键)")
 
         # 播放模式
-        self._mode_btn = QPushButton(PLAY_MODE_SYMBOLS[self._play_mode])
+        self._mode_btn = QPushButton()
+        self._mode_btn.setIcon(load_icon(f"{PLAY_MODE_ICONS[self._play_mode]}.svg"))
+        self._mode_btn.setIconSize(Qt.QSize(icon_size, icon_size))
         self._mode_btn.setStyleSheet(btn_style)
         self._mode_btn.setToolTip(PLAY_MODE_TOOLTIPS[self._play_mode])
 
         # 全屏
-        self._fullscreen_btn = QPushButton("⛶")
+        self._fullscreen_btn = QPushButton()
+        self._fullscreen_btn.setIcon(load_icon("fullscreen.svg"))
+        self._fullscreen_btn.setIconSize(Qt.QSize(icon_size, icon_size))
         self._fullscreen_btn.setStyleSheet(btn_style)
         self._fullscreen_btn.setToolTip("全屏 (F 键)")
 
@@ -171,7 +199,7 @@ class ControlBar(QWidget):
         row2.addSpacing(12)
         row2.addWidget(self._speed_btn)
 
-        row2.addSpacing(8)
+        row2.addSpacing(6)
         row2.addWidget(self._sub_btn)
         row2.addWidget(self._audio_btn)
         row2.addWidget(self._screenshot_btn)
@@ -219,8 +247,7 @@ class ControlBar(QWidget):
         self._dragging = True
 
     def _on_seek_moved(self, value: int):
-        ratio = value / 1000.0
-        self._time_label.setText(f"--- / ---")
+        self._time_label.setText("--- / ---")
 
     def _on_seek_released(self):
         self._dragging = False
@@ -232,7 +259,6 @@ class ControlBar(QWidget):
     def _on_position(self, seconds: float):
         if self._dragging:
             return
-        # 需要总时长来算进度
         self._seek_slider.blockSignals(True)
         if self._duration > 0 and seconds >= 0:
             ratio = min(1.0, seconds / self._duration)
@@ -250,7 +276,8 @@ class ControlBar(QWidget):
         self._time_label.setText(f"{self._fmt_time(cur)} / {self._fmt_time(duration)}")
 
     def _on_play_state(self, playing: bool):
-        self._play_btn.setText("⏸" if playing else "▶")
+        icon_name = "pause" if playing else "play"
+        self._play_btn.setIcon(load_icon(f"{icon_name}.svg"))
 
     # ── 按钮点击 ──
 
@@ -281,8 +308,6 @@ class ControlBar(QWidget):
             self._controller.cycle_play_mode()
 
     def _on_fullscreen(self):
-        # MainWindow 会连接这个信号
-        self._fullscreen_btn.setText("⛶")
         player_signals.fullscreen_changed.emit(True)
 
     def _on_screenshot(self):
@@ -314,11 +339,15 @@ class ControlBar(QWidget):
     # ── 信号响应 ──
 
     def _on_speed_changed(self, rate: float):
-        self._speed_btn.setText(f"{rate:.2f}x".rstrip("0").rstrip(".") + "x" if rate != 1.0 else "1.0x")
+        text = f"{rate:.2f}x".rstrip("0").rstrip(".")
+        if text.endswith("."):
+            text = text[:-1]
+        self._speed_btn.setText(f"{text}x" if rate != 1.0 else "1.0x")
 
     def _on_play_mode_changed(self, mode: int):
         self._play_mode = mode
-        self._mode_btn.setText(PLAY_MODE_SYMBOLS.get(mode, "🔁"))
+        icon_name = PLAY_MODE_ICONS.get(mode, "loop_all")
+        self._mode_btn.setIcon(load_icon(f"{icon_name}.svg"))
         self._mode_btn.setToolTip(PLAY_MODE_TOOLTIPS.get(mode, ""))
 
     def _on_subtitle_tracks(self, tracks: list):
