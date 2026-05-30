@@ -30,11 +30,9 @@ class VideoWidget(QWidget):
             vo="gpu",
             hwdec="auto",
             keepaspect=True,
-            cache="yes",
-            demuxer_max_bytes="150e6",
-            osc="no",          # 用自绘控制栏，关闭 mpv OSD
-            osd_level="0",
-            input_default="no",
+            demuxer_max_bytes=150_000_000,
+            osc=False,          # 用自绘控制栏，关闭 mpv OSD
+            osd_level=0,
         )
 
         # 注册属性监听
