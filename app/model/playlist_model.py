@@ -34,16 +34,16 @@ class PlaylistModel(QObject):
         super().__init__(parent)
         self.items: list[PlaylistItem] = []
         self.current_index: int = -1
-        self._mode: PlayMode = PlayMode.LOOP_ALL
+        self._mode: PlaylistModel.PlayMode = PlaylistModel.PlayMode.LOOP_ALL
         self._shuffle_order: list[int] = []   # 随机播放时的索引序列
         self._shuffle_pos: int = 0
 
     @property
-    def mode(self) -> PlayMode:
+    def mode(self) -> "PlaylistModel.PlayMode":
         return self._mode
 
     @mode.setter
-    def mode(self, value: PlayMode) -> None:
+    def mode(self, value: "PlaylistModel.PlayMode") -> None:
         self._mode = value
         self._rebuild_shuffle()
         player_signals.play_mode_changed.emit(value)
@@ -110,19 +110,19 @@ class PlaylistModel(QObject):
         if n == 0:
             return -1
         match self._mode:
-            case PlayMode.LOOP_ONE:
+            case PM.LOOP_ONE:
                 return self.current_index
-            case PlayMode.SHUFFLE:
+            case PM.SHUFFLE:
                 if self._shuffle_pos + 1 < len(self._shuffle_order):
                     self._shuffle_pos += 1
                 else:
                     self._rebuild_shuffle()
                     self._shuffle_pos = 0
                 return self._shuffle_order[self._shuffle_pos]
-            case PlayMode.SEQUENTIAL:
+            case PM.SEQUENTIAL:
                 nxt = self.current_index + 1
                 return nxt if nxt < n else -1
-            case PlayMode.LOOP_ALL:
+            case PM.LOOP_ALL:
                 return (self.current_index + 1) % n
             case _:
                 return -1
@@ -132,17 +132,17 @@ class PlaylistModel(QObject):
         if n == 0:
             return -1
         match self._mode:
-            case PlayMode.LOOP_ONE:
+            case PM.LOOP_ONE:
                 return self.current_index
-            case PlayMode.SHUFFLE:
+            case PM.SHUFFLE:
                 if self._shuffle_pos > 0:
                     self._shuffle_pos -= 1
                     return self._shuffle_order[self._shuffle_pos]
                 return self.current_index
-            case PlayMode.SEQUENTIAL:
+            case PM.SEQUENTIAL:
                 prv = self.current_index - 1
                 return prv if prv >= 0 else -1
-            case PlayMode.LOOP_ALL:
+            case PM.LOOP_ALL:
                 return (self.current_index - 1) % n
             case _:
                 return -1
@@ -168,3 +168,7 @@ class PlaylistModel(QObject):
                 self._shuffle_pos = pos
             except ValueError:
                 pass
+
+
+# Module-level alias for match/case patterns
+PM = PlaylistModel.PlayMode
