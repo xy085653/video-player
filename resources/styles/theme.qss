@@ -12,6 +12,48 @@ QMainWindow {
     background-color: #1a1a2e;
 }
 
+/* ── 菜单栏 ── */
+QMenuBar {
+    background-color: #16162a;
+    border-bottom: 1px solid #2a2a44;
+    padding: 2px 4px;
+    color: #bbb;
+}
+QMenuBar::item {
+    padding: 4px 12px;
+    border-radius: 4px;
+    background: transparent;
+}
+QMenuBar::item:selected {
+    background: rgba(108, 99, 255, 0.2);
+    color: #d0d0ff;
+}
+QMenuBar::item:pressed {
+    background: rgba(108, 99, 255, 0.3);
+}
+
+/* ── 菜单（下拉） ── */
+QMenu {
+    background-color: #22223a;
+    border: 1px solid #444;
+    border-radius: 6px;
+    padding: 4px;
+}
+QMenu::item {
+    padding: 6px 24px 6px 12px;
+    border-radius: 4px;
+    color: #ccc;
+}
+QMenu::item:selected {
+    background: rgba(108, 99, 255, 0.3);
+    color: #fff;
+}
+QMenu::separator {
+    height: 1px;
+    background: #444;
+    margin: 4px 8px;
+}
+
 /* ── TabWidget ── */
 QTabWidget::pane {
     border: none;
@@ -78,25 +120,26 @@ QScrollBar::add-page:vertical, QScrollBar::sub-page:vertical {
     background: none;
 }
 
-/* ── 菜单 ── */
-QMenu {
-    background-color: #22223a;
-    border: 1px solid #444;
-    border-radius: 6px;
-    padding: 4px;
+/* ── 统一滑动条（进度条 + 音量） ── */
+QSlider::groove:horizontal {
+    height: 4px;
+    background: #3a3a50;
+    border-radius: 2px;
 }
-QMenu::item {
-    padding: 6px 24px 6px 12px;
-    border-radius: 4px;
+QSlider::handle:horizontal {
+    width: 14px;
+    height: 14px;
+    margin: -5px 0;
+    background: #6c63ff;
+    border-radius: 7px;
 }
-QMenu::item:selected {
-    background: rgba(108, 99, 255, 0.3);
-    color: #fff;
+QSlider::handle:horizontal:hover {
+    background: #8b83ff;
 }
-QMenu::separator {
-    height: 1px;
-    background: #444;
-    margin: 4px 8px;
+QSlider::sub-page:horizontal {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+        stop:0 #6c63ff, stop:1 #8b83ff);
+    border-radius: 2px;
 }
 
 /* ── 消息框 ── */

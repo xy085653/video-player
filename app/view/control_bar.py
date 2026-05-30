@@ -61,25 +61,6 @@ class ControlBar(QWidget):
         self._seek_slider = QSlider(Qt.Horizontal)
         self._seek_slider.setRange(0, 1000)
         self._seek_slider.setValue(0)
-        self._seek_slider.setStyleSheet("""
-            QSlider::groove:horizontal {
-                height: 4px;
-                background: #444;
-                border-radius: 2px;
-            }
-            QSlider::handle:horizontal {
-                width: 14px;
-                height: 14px;
-                margin: -5px 0;
-                background: #6c63ff;
-                border-radius: 7px;
-            }
-            QSlider::sub-page:horizontal {
-                background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                    stop:0 #6c63ff, stop:1 #8b83ff);
-                border-radius: 2px;
-            }
-        """)
         self._seek_slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
 
         row1.addWidget(self._time_label)
@@ -93,11 +74,15 @@ class ControlBar(QWidget):
         btn_style = """
             QPushButton {
                 background: transparent;
-                border: none;
+                border: 1px solid transparent;
+                border-radius: 4px;
                 padding: 4px 6px;
                 color: #ddd;
             }
-            QPushButton:hover { color: #fff; }
+            QPushButton:hover {
+                color: #fff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
             QPushButton:pressed { color: #6c63ff; }
         """
 
@@ -111,17 +96,20 @@ class ControlBar(QWidget):
         self._play_btn = QPushButton()
         self._play_btn.setIcon(load_icon("play.svg"))
         self._play_btn.setIconSize(QSize(icon_size + 4, icon_size + 4))
-        self._play_btn.setFixedWidth(44)
+        self._play_btn.setFixedWidth(40)
+        self._play_btn.setFixedHeight(36)
         self._play_btn.setStyleSheet("""
             QPushButton {
                 background: #6c63ff;
-                border: none;
-                border-radius: 18px;
+                border: 1px solid transparent;
+                border-radius: 4px;
                 padding: 4px;
                 color: white;
-                min-height: 32px;
             }
-            QPushButton:hover { background: #7b73ff; }
+            QPushButton:hover {
+                background: #7b73ff;
+                border: 1px solid rgba(255, 255, 255, 0.3);
+            }
             QPushButton:pressed { background: #5b53ef; }
         """)
 
