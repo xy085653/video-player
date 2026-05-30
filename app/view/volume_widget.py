@@ -1,5 +1,5 @@
 # app/view/volume_widget.py
-from PySide6.QtCore import Qt
+from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QIcon
 from PySide6.QtWidgets import (QWidget, QHBoxLayout, QPushButton,
                                QSlider)
@@ -18,7 +18,7 @@ class VolumeWidget(QWidget):
 
         self._btn = QPushButton()
         self._btn.setFixedSize(32, 32)
-        self._btn.setIconSize(Qt.QSize(20, 20))
+        self._btn.setIconSize(QSize(20, 20))
         self._btn.setToolTip("音量 (M 键静音)")
         self._btn.setStyleSheet("""
             QPushButton {
