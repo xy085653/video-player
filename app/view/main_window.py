@@ -31,7 +31,7 @@ class MainWindow(QMainWindow):
         self._was_maximized = False
         self._pending_resume: float = 0.0
 
-        self.setWindowTitle("视频播放器")
+        self.setWindowTitle("视界")
         self.setMinimumSize(800, 500)
         self.setAcceptDrops(True)
 

@@ -11,7 +11,7 @@ os.environ["PATH"] = _project_root + os.pathsep + os.environ.get("PATH", "")
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
-from PySide6.QtGui import QFont
+from PySide6.QtGui import QFont, QIcon
 
 from app.model.config import ConfigManager
 from app.view.main_window import MainWindow
@@ -33,8 +33,14 @@ def main():
         )
 
     app = QApplication(sys.argv)
-    app.setApplicationName("视频播放器")
-    app.setOrganizationName("MediaPlayer")
+    app.setApplicationName("视界")
+    app.setOrganizationName("VisionPlayer")
+
+    # 设置应用图标
+    icon_path = os.path.join(_project_root, "resources", "icons", "app_icon.svg")
+    if os.path.exists(icon_path):
+        app_icon = QIcon(icon_path)
+        app.setWindowIcon(app_icon)
 
     # 字体设置
     font = QFont("Microsoft YaHei", 9)
