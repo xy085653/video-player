@@ -1,7 +1,7 @@
 # app/view/video_widget.py
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QWidget, QVBoxLayout, QLabel
-from mpv import MPV
+from mpv import MPV, MpvEventID, MpvEventEndFile
 
 from app.signals.bus import player_signals
 
@@ -96,9 +96,8 @@ class VideoWidget(QWidget):
             player_signals.audio_tracks.emit(audios)
 
     def _on_event(self, event):
-        if event.get("event") == "end-file":
-            reason = event.get("reason")
-            if reason == "eof":
+        if event.event_id == MpvEventID.END_FILE:
+            if hasattr(event.data, 'reason') and event.data.reason == MpvEventEndFile.EOF:
                 player_signals.eos_reached.emit()
 
     def resizeEvent(self, event):
