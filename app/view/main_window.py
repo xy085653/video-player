@@ -111,13 +111,13 @@ class MainWindow(QMainWindow):
         view_menu.addAction(history_action)
 
         play_menu = menubar.addMenu("播放(&P)")
-        self._play_pause_action = QAction("播放/暂停", self)
-        self._play_pause_action.setShortcut(QKeySequence(Qt.Key_Space))
+        self._play_pause_action = QAction("播放/暂停\tSpace", self)
         self._play_pause_action.triggered.connect(lambda: self._controller and self._controller.toggle_play())
         play_menu.addAction(self._play_pause_action)
 
     def _setup_shortcuts(self):
-        # Space → 已在菜单中绑定
+        # Space → 播放/暂停（用 QShortcut 而非 QAction，避免全屏时菜单栏冲突）
+        QShortcut(QKeySequence(Qt.Key_Space), self, lambda: self._controller and self._controller.toggle_play())
         # 方向键
         QShortcut(QKeySequence(Qt.Key_Left), self, lambda: self._controller and self._controller.seek(-5, True))
         QShortcut(QKeySequence(Qt.Key_Right), self, lambda: self._controller and self._controller.seek(5, True))
