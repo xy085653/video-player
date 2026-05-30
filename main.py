@@ -4,8 +4,10 @@
 import sys
 import os
 
-# 确保项目根目录在 sys.path 中
-sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+# 确保项目根目录在 sys.path 和 PATH 中（用于查找 mpv-1.dll）
+_project_root = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, _project_root)
+os.environ["PATH"] = _project_root + os.pathsep + os.environ.get("PATH", "")
 
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QApplication
