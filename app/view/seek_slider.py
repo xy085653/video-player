@@ -10,6 +10,10 @@ class SeekSlider(QSlider):
         if event.button() == Qt.LeftButton:
             val = self._pick_value_from_click(event.position().x())
             self.setValue(val)
+            # 手动触发信号，确保 ControlBar 执行 seek
+            self.sliderPressed.emit()
+            self.sliderMoved.emit(val)
+            self.sliderReleased.emit()
             event.accept()
             return
         super().mousePressEvent(event)
@@ -18,6 +22,7 @@ class SeekSlider(QSlider):
         if event.buttons() & Qt.LeftButton:
             val = self._pick_value_from_click(event.position().x())
             self.setValue(val)
+            self.sliderMoved.emit(val)
             event.accept()
             return
         super().mouseMoveEvent(event)
