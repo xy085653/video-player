@@ -30,6 +30,7 @@ class MainWindow(QMainWindow):
         self._is_fullscreen = False
         self._was_maximized = False
         self._pending_resume: float = 0.0
+        self._splitter_sizes: list[int] | None = None
 
         self.setWindowTitle("视界")
         self.setMinimumSize(800, 500)
@@ -237,16 +238,18 @@ class MainWindow(QMainWindow):
     def _enter_fullscreen(self):
         self._was_maximized = self.isMaximized()
         self._is_fullscreen = True
-        self._playlist_panel.hide()
-        self._control_bar.hide()
-        self.menuBar().hide()
+        self._splitter_sizes = self._splitter.sizes()
+        self._splitter.setSizes([self.width(), 0])
+        self._control_bar.setVisible(False)
+        self.menuBar().setVisible(False)
         self.showFullScreen()
 
     def _exit_fullscreen(self):
         self._is_fullscreen = False
-        self._playlist_panel.show()
-        self._control_bar.show()
-        self.menuBar().show()
+        if self._splitter_sizes:
+            self._splitter.setSizes(self._splitter_sizes)
+        self._control_bar.setVisible(True)
+        self.menuBar().setVisible(True)
         if self._was_maximized:
             self.showMaximized()
         else:
