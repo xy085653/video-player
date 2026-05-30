@@ -31,8 +31,9 @@ class VideoWidget(QWidget):
             hwdec="auto",
             keepaspect=True,
             demuxer_max_bytes=150_000_000,
-            osc=False,          # 用自绘控制栏，关闭 mpv OSD
+            osc=False,              # 用自绘控制栏，关闭 mpv OSD
             osd_level=0,
+            input_default_bindings=False,  # 禁用 mpv 默认键绑定，全部走 Qt 快捷键
         )
 
         # 注册属性监听
