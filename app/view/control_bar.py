@@ -1,5 +1,5 @@
 # app/view/control_bar.py
-from PySide6.QtCore import Qt, QTimer
+from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QKeySequence, QShortcut, QFont, QIcon
 from PySide6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout,
                                QPushButton, QSlider, QLabel,
@@ -104,13 +104,13 @@ class ControlBar(QWidget):
         # 上一曲
         self._prev_btn = QPushButton()
         self._prev_btn.setIcon(load_icon("prev.svg"))
-        self._prev_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._prev_btn.setIconSize(QSize(icon_size, icon_size))
         self._prev_btn.setToolTip("上一曲")
 
         # 播放/暂停
         self._play_btn = QPushButton()
         self._play_btn.setIcon(load_icon("play.svg"))
-        self._play_btn.setIconSize(Qt.QSize(icon_size + 4, icon_size + 4))
+        self._play_btn.setIconSize(QSize(icon_size + 4, icon_size + 4))
         self._play_btn.setFixedWidth(44)
         self._play_btn.setStyleSheet("""
             QPushButton {
@@ -128,13 +128,13 @@ class ControlBar(QWidget):
         # 下一曲
         self._next_btn = QPushButton()
         self._next_btn.setIcon(load_icon("next.svg"))
-        self._next_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._next_btn.setIconSize(QSize(icon_size, icon_size))
         self._next_btn.setToolTip("下一曲")
 
         # 停止
         self._stop_btn = QPushButton()
         self._stop_btn.setIcon(load_icon("stop.svg"))
-        self._stop_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._stop_btn.setIconSize(QSize(icon_size, icon_size))
         self._stop_btn.setToolTip("停止")
 
         for btn in (self._prev_btn, self._play_btn, self._next_btn, self._stop_btn):
@@ -155,35 +155,35 @@ class ControlBar(QWidget):
         # 字幕按钮
         self._sub_btn = QPushButton()
         self._sub_btn.setIcon(load_icon("subtitle.svg"))
-        self._sub_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._sub_btn.setIconSize(QSize(icon_size, icon_size))
         self._sub_btn.setStyleSheet(btn_style)
         self._sub_btn.setToolTip("字幕轨道")
 
         # 音轨按钮
         self._audio_btn = QPushButton()
         self._audio_btn.setIcon(load_icon("audio_track.svg"))
-        self._audio_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._audio_btn.setIconSize(QSize(icon_size, icon_size))
         self._audio_btn.setStyleSheet(btn_style)
         self._audio_btn.setToolTip("音轨切换")
 
         # 截图
         self._screenshot_btn = QPushButton()
         self._screenshot_btn.setIcon(load_icon("screenshot.svg"))
-        self._screenshot_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._screenshot_btn.setIconSize(QSize(icon_size, icon_size))
         self._screenshot_btn.setStyleSheet(btn_style)
         self._screenshot_btn.setToolTip("截图 (S 键)")
 
         # 播放模式
         self._mode_btn = QPushButton()
         self._mode_btn.setIcon(load_icon(f"{PLAY_MODE_ICONS[self._play_mode]}.svg"))
-        self._mode_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._mode_btn.setIconSize(QSize(icon_size, icon_size))
         self._mode_btn.setStyleSheet(btn_style)
         self._mode_btn.setToolTip(PLAY_MODE_TOOLTIPS[self._play_mode])
 
         # 全屏
         self._fullscreen_btn = QPushButton()
         self._fullscreen_btn.setIcon(load_icon("fullscreen.svg"))
-        self._fullscreen_btn.setIconSize(Qt.QSize(icon_size, icon_size))
+        self._fullscreen_btn.setIconSize(QSize(icon_size, icon_size))
         self._fullscreen_btn.setStyleSheet(btn_style)
         self._fullscreen_btn.setToolTip("全屏 (F 键)")
 
