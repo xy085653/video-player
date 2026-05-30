@@ -1,11 +1,11 @@
 # app/view/volume_widget.py
 from PySide6.QtCore import Qt, QSize
 from PySide6.QtGui import QIcon
-from PySide6.QtWidgets import (QWidget, QHBoxLayout, QPushButton,
-                               QSlider)
+from PySide6.QtWidgets import (QWidget, QHBoxLayout, QPushButton)
 
 from app.signals.bus import player_signals
 from app.view.icon_helper import load_icon
+from app.view.seek_slider import SeekSlider
 
 
 class VolumeWidget(QWidget):
@@ -29,7 +29,7 @@ class VolumeWidget(QWidget):
             QPushButton:hover { color: #fff; }
         """)
 
-        self._slider = QSlider(Qt.Horizontal)
+        self._slider = SeekSlider(Qt.Horizontal)
         self._slider.setRange(0, 100)
         self._slider.setValue(50)
         self._slider.setFixedWidth(100)

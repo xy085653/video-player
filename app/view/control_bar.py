@@ -2,10 +2,11 @@
 from PySide6.QtCore import Qt, QTimer, QSize
 from PySide6.QtGui import QKeySequence, QShortcut, QFont, QIcon
 from PySide6.QtWidgets import (QWidget, QHBoxLayout, QVBoxLayout,
-                               QPushButton, QSlider, QLabel,
+                               QPushButton, QLabel,
                                QMenu, QSizePolicy)
 
 from app.signals.bus import player_signals
+from app.view.seek_slider import SeekSlider
 from app.view.volume_widget import VolumeWidget
 from app.view.icon_helper import load_icon
 from app.model.playlist_model import PlaylistModel
@@ -58,7 +59,7 @@ class ControlBar(QWidget):
         self._time_label.setAlignment(Qt.AlignCenter)
         self._time_label.setStyleSheet("color: #aaa; font-size: 12px;")
 
-        self._seek_slider = QSlider(Qt.Horizontal)
+        self._seek_slider = SeekSlider(Qt.Horizontal)
         self._seek_slider.setRange(0, 1000)
         self._seek_slider.setValue(0)
         self._seek_slider.setSizePolicy(QSizePolicy.Expanding, QSizePolicy.Fixed)
@@ -235,7 +236,9 @@ class ControlBar(QWidget):
         self._dragging = True
 
     def _on_seek_moved(self, value: int):
-        self._time_label.setText("--- / ---")
+        if self._duration > 0:
+            preview = self._duration * value / 1000.0
+            self._time_label.setText(f"{self._fmt_time(preview)} / {self._fmt_time(self._duration)}")
 
     def _on_seek_released(self):
         self._dragging = False
