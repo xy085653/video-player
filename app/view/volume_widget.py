@@ -1,0 +1,72 @@
+# app/view/volume_widget.py
+from PySide6.QtCore import Qt, QTimer
+from PySide6.QtGui import QIcon
+from PySide6.QtWidgets import (QWidget, QHBoxLayout, QPushButton,
+                               QSlider, QVBoxLayout)
+
+from app.signals.bus import player_signals
+
+
+class VolumeWidget(QWidget):
+    """音量按钮 + 弹出滑块组合控件。"""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._volume = 50
+        self._muted = False
+
+        self._btn = QPushButton()
+        self._btn.setFixedSize(32, 32)
+        self._btn.setToolTip("音量 (M 键静音)")
+        self._update_icon()
+
+        self._slider = QSlider(Qt.Horizontal)
+        self._slider.setRange(0, 100)
+        self._slider.setValue(50)
+        self._slider.setFixedWidth(100)
+        self._slider.setFixedHeight(20)
+
+        layout = QHBoxLayout(self)
+        layout.setContentsMargins(0, 0, 0, 0)
+        layout.setSpacing(4)
+        layout.addWidget(self._btn)
+        layout.addWidget(self._slider)
+        layout.addStretch()
+
+        self._btn.clicked.connect(self._on_button_clicked)
+        self._slider.valueChanged.connect(self._on_slider_changed)
+
+        player_signals.volume_changed.connect(self._on_volume_changed)
+        player_signals.muted_changed.connect(self._on_muted_changed)
+
+    def _on_button_clicked(self):
+        self._controller.toggle_mute() if hasattr(self, '_controller') else None
+
+    def _on_slider_changed(self, value: int):
+        if hasattr(self, '_controller'):
+            self._controller.set_volume(value)
+
+    def _on_volume_changed(self, vol: int):
+        self._volume = vol
+        self._slider.blockSignals(True)
+        self._slider.setValue(vol)
+        self._slider.blockSignals(False)
+        self._update_icon()
+
+    def _on_muted_changed(self, muted: bool):
+        self._muted = muted
+        self._update_icon()
+
+    def _update_icon(self):
+        if self._muted or self._volume == 0:
+            text = "🔇"
+        elif self._volume < 35:
+            text = "🔈"
+        elif self._volume < 70:
+            text = "🔉"
+        else:
+            text = "🔊"
+        self._btn.setText(text)
+
+    def set_controller(self, controller):
+        self._controller = controller
